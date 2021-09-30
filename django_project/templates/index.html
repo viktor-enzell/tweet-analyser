@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="container py-4" style="max-width: 760px;">
+
+    <h1 class="fs-2 text-center mb-3">Sentiment Analyser</h1>
+
+    <form action="/" method="get">
+      {% csrf_token %}
+      {{ text_form.non_field_errors }}
+      <div class="mb-3">
+        {{ text_form.text.errors }}
+        {{ text_form.text }}
+      </div>
+    </form>
+
+    {% if text %}
+      <p class="text-center">
+        {% if sentiment_is_positive %}
+          The text is positive
+        {% else %}
+          The text is negative
+        {% endif %}
+      </p>
+    {% else %}
+      <p class="text-center">Enter text into the field to determine its sentiment</p>
+    {% endif %}
+
+  </div>
+{% endblock %}
