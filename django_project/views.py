@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from .forms import TextForm
-from random import randrange
 
+from .twitter_client import TwitterClient
 
-def make_prediction(text):
-    return 0 == randrange(2)
+twitter_client = TwitterClient()
 
 
 def index(request):
@@ -21,7 +20,7 @@ def index(request):
                     context = {
                         'text_form': text_form,
                         'text': text,
-                        'sentiment_is_positive': make_prediction(text)
+                        'tweet': twitter_client.get_tweet(text)
                     }
                     return render(request, 'index.html', context)
 

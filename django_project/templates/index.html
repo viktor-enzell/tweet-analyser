@@ -15,16 +15,10 @@
       </div>
     </form>
 
-    {% if text %}
+    {% if tweet %}
       <p class="text-center">
-        {% if sentiment_is_positive %}
-          The text is positive
-        {% else %}
-          The text is negative
-        {% endif %}
+        {{ tweet }}
       </p>
-    {% else %}
-      <p class="text-center">Enter text into the field to determine its sentiment</p>
     {% endif %}
 
   </div>
