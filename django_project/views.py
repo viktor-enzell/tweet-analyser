@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from .forms import TextForm
-
+from .sentiment_model import SentimentModel
 from .twitter_client import TwitterClient
 
 twitter_client = TwitterClient()
+sentiment_model = SentimentModel()
 
 
 def index(request):
@@ -17,10 +18,13 @@ def index(request):
                 text = text_form.cleaned_data.get('text', False)
                 if text:
                     request.session['text'] = text
+                    comments = twitter_client.get_comments(text)
+                    sentiment = sentiment_model.get_sentiment(comments)
+                    sentiment_is_positive = False
                     context = {
                         'text_form': text_form,
                         'text': text,
-                        'tweet': twitter_client.get_tweet(text)
+                        'sentiment_is_positive': sentiment_is_positive
                     }
                     return render(request, 'index.html', context)
 

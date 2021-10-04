@@ -24,7 +24,11 @@ class TwitterClient:
         query_params = {'tweet.fields': 'in_reply_to_user_id'}
 
         json_response = self.connect_to_endpoint(url, query_params)
-        print(json.dumps(json_response, indent=4, sort_keys=True))
+        comment_items = json_response['data']
+        comments = []
+        for item in comment_items:
+            comments.append(item['text'])
+        return comments
 
     @staticmethod
     def parse_tweet_id(text):
