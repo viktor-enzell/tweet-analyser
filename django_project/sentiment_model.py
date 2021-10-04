@@ -12,6 +12,8 @@ class SentimentModel:
 
     # Takes a list of texts and returns sentiment from 0 to 1
     def get_sentiment(self, data):
+        if not data:
+            return 0.5
         features = self.vec.transform(data)
         res = self.model.predict(features)
         return sum(res) / len(res)

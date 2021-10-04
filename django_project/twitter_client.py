@@ -24,6 +24,9 @@ class TwitterClient:
         query_params = {'tweet.fields': 'in_reply_to_user_id'}
 
         json_response = self.connect_to_endpoint(url, query_params)
+        if json_response['meta']['result_count'] == 0:
+            return []
+
         comment_items = json_response['data']
         comments = []
         for item in comment_items:
