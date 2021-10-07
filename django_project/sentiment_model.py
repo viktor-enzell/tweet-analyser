@@ -31,7 +31,8 @@ class SentimentModel:
         return self.data[min_index]
 
     def get_boxplot(self):
-        return plt.boxplot(self.res, notch=None, vert=True, patch_artist=None, widths=None)
+        plt.boxplot(self.res, notch=None, vert=True, patch_artist=None, widths=None)
+        plt.savefig('static/boxplot_tmp.png')
 
     def get_std(self):
         return statistics.stdev(self.res)

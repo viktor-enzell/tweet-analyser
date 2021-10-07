@@ -26,6 +26,7 @@ def index(request):
                     tweet_retrieved = len(tweet) > 0 and len(comments) > 0
 
                     sentiment = sentiment_model.fit_predict(comments)
+                    sentiment_model.get_boxplot()
 
                     context = {
                         'tweet_id_form': tweet_id_form,

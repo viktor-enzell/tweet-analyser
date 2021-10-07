@@ -9,7 +9,7 @@
     <form action="/" method="get" class="mb-4">
       {% csrf_token %}
       {{ tweet_id_form.non_field_errors }}
-      <div class="mb-4">
+      <div>
         {{ tweet_id_form.tweet_id_input.errors }}
         {{ tweet_id_form.tweet_id_input }}
       </div>
@@ -20,6 +20,8 @@
 
       {% include "progress_bar.html" with item_name="Sentiment" item_percent=sentiment %}
       {% include "progress_bar.html" with item_name="Like ratio" item_percent=like_ratio %}
+
+      {% include "boxplot.html" %}
     {% endif %}
 
   </div>
