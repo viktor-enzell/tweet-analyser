@@ -1,12 +1,12 @@
 from django import forms
 
 
-class TextForm(forms.Form):
-    text = forms.CharField(
+class TweetIDForm(forms.Form):
+    tweet_id_input = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={
             'type': 'text',
             'class': 'form-control',
-            'placeholder': 'Enter some text...'
+            'placeholder': 'Enter a link to a Tweet or a Tweet ID...'
         })
     )

@@ -9,7 +9,7 @@ class TwitterClient:
     def get_tweet(self, tweet_id):
         tweet_id = self.parse_tweet_id(tweet_id)
         if tweet_id == -1:
-            return 'Tweet id parsing failed'
+            return ''
         url = f'https://api.twitter.com/2/tweets?ids={tweet_id}'
         query_params = {'tweet.fields': 'author_id'}
 
@@ -19,7 +19,7 @@ class TwitterClient:
     def get_comments(self, tweet_id):
         tweet_id = self.parse_tweet_id(tweet_id)
         if tweet_id == -1:
-            return 'Tweet id parsing failed'
+            return []
         url = f'https://api.twitter.com/2/tweets/search/recent?query=conversation_id:{tweet_id}'
         query_params = {'tweet.fields': 'in_reply_to_user_id'}
 

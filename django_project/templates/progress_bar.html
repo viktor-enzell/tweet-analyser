@@ -1,0 +1,19 @@
+<div class="row mb-4">
+
+  <div class="col-3 fs-5">
+    {{ item_name }}
+  </div>
+  <div class="col">
+
+    <div class="progress" style="height: 100%">
+      <div class="progress-bar"
+           role="progressbar"
+           style="width: {{ item_percent }}%"
+           aria-valuenow="{{ item_percent }}"
+           aria-valuemin="0"
+           aria-valuemax="100">{{ item_percent }}%
+      </div>
+    </div>
+
+  </div>
+</div>
