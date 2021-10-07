@@ -17,7 +17,9 @@ class SentimentModel:
             return 0.5
         self.data = data
         features = self.vec.transform(data)
-        self.res = self.model.predict(features)
+
+        predictions = self.model.predict_proba(features)
+        self.res = [prediction[1] for prediction in predictions]
         return sum(self.res) / len(self.res)
 
     def get_positive_outlier(self):
@@ -33,4 +35,3 @@ class SentimentModel:
 
     def get_std(self):
         return statistics.stdev(self.res)
-    
