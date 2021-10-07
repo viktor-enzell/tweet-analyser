@@ -19,7 +19,7 @@ def index(request):
                 if text:
                     request.session['text'] = text
                     comments = twitter_client.get_comments(text)
-                    sentiment = sentiment_model.get_sentiment(comments)
+                    sentiment = sentiment_model.fit_predict(comments)
                     context = {
                         'text_form': text_form,
                         'text': text,
