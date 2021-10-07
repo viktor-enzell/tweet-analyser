@@ -6,6 +6,16 @@ import json
 class TwitterClient:
     bearer_token = os.getenv('TWITTER_BEARER_TOKEN')
 
+    def get_tweet_meta(self, tweet_id):
+        # Example return: {'retweet_count': 254, 'reply_count': 164, 'like_count': 4286, 'quote_count': 104} 
+        tweet_id = self.parse_tweet_id(tweet_id)
+        if tweet_id == -1:
+            return 'Tweet id parsing failed'
+        url = f'https://api.twitter.com/2/tweets?ids={tweet_id}'
+        query_params = {'tweet.fields': 'public_metrics'}
+        json_response = self.connect_to_endpoint(url, query_params)
+        return json_response['data'][0]['public_metrics']
+
     def get_tweet(self, tweet_id):
         tweet_id = self.parse_tweet_id(tweet_id)
         if tweet_id == -1:

@@ -25,7 +25,7 @@ def index(request):
                     comments = twitter_client.get_comments(tweet_id)
                     tweet_retrieved = len(tweet) > 0 and len(comments) > 0
 
-                    sentiment = sentiment_model.get_sentiment(comments)
+                    sentiment = sentiment_model.fit_predict(comments)
 
                     context = {
                         'tweet_id_form': tweet_id_form,
