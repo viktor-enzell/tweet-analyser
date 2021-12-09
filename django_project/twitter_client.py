@@ -43,6 +43,20 @@ class TwitterClient:
             comments.append(item['text'])
         return comments
 
+    # scale of 0-2 of meta_data sentiment. 0 is not positive, 2 is positive
+    def how_good(self,meta_data):
+        count = 0
+        retweet_count = meta_data['retweet_count']
+        like_count = meta_data['like_count']
+        reply_count = meta_data['reply_count']
+        quote_count = meta_data['quote_count']
+
+        if retweet_count > reply_count:
+            count = count + 1
+        if quote_count > reply_count:
+            count = count + 1
+        return count
+
     @staticmethod
     def parse_tweet_id(text):
         try:
