@@ -44,16 +44,30 @@ def index(request):
 def single_tweet_data(tweet_id):
     tweet = twitter_client.get_tweet(tweet_id)
     comments = twitter_client.get_comments(tweet_id)
-    comment_sentiment = sentiment_model.fit_predict(comments)
+    
+    tweet_data = sentiment_model.fit_predict(comments, tweet["text"])
+    """
+    {
+            "tweet_sentiment": ,
+            "average_comment_sentiment": ,
+            "max_reply": {
+                "text" : ,
+                "sentiment" : 
+            },
+            "min_reply": {
+                "text" : ,
+                "sentiment" : 
+            },
+    """
     tweet_has_comments = len(comments) > 0
-    if tweet_has_comments:
-        sentiment_model.get_boxplot()
+    # if tweet_has_comments:
+    #     sentiment_model.get_boxplot()
 
     return {
         'request_success': len(tweet) > 0,
         'tweet': tweet,
         'tweet_has_comments': tweet_has_comments,
-        'comment_sentiment': comment_sentiment * 100,
+        'comment_sentiment': tweet_data["average_comment_sentiment"] * 100,
     }
 
 
