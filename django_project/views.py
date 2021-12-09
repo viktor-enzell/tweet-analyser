@@ -42,12 +42,13 @@ def index(request):
 
 
 def single_tweet_data(tweet_id):
-    tweet = twitter_client.get_tweet(tweet_id)
+    tweet, meta = twitter_client.get_tweet(tweet_id)
     comments = twitter_client.get_comments(tweet_id)
     comment_sentiment = sentiment_model.fit_predict(comments)
     tweet_has_comments = len(comments) > 0
-    if tweet_has_comments:
-        sentiment_model.get_boxplot()
+
+    # if tweet_has_comments:
+    #     sentiment_model.get_boxplot()
 
     return {
         'request_success': len(tweet) > 0,
@@ -59,8 +60,11 @@ def single_tweet_data(tweet_id):
 
 def multi_tweet_data(username):
     tweets = twitter_client.get_user_tweets(username)
+    ind_analysed_tweets = []
+    for tweet in tweets:
+        ind_analysed_tweets.append(single_tweet_data(tweet['id']))
 
     return {
         'request_success': len(tweets) > 0,
-        'tweets': tweets,
+        'tweets': ind_analysed_tweets,
     }
