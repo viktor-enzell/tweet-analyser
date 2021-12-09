@@ -1,27 +1,40 @@
 import os
 import requests
-import json
 
 
 class TwitterClient:
     bearer_token = os.getenv('TWITTER_BEARER_TOKEN')
 
-    def get_tweet_meta(self, tweet_id):
-        # Example return: {'retweet_count': 254, 'reply_count': 164, 'like_count': 4286, 'quote_count': 104} 
-        tweet_id = self.parse_id_or_username(tweet_id)
-        if tweet_id == -1:
-            return 'Tweet id parsing failed'
-        url = f'https://api.twitter.com/2/tweets?ids={tweet_id}'
+    def get_user_id(self, username):
+        url = f'https://api.twitter.com/2/users/by/username/{username}'
         query_params = {'tweet.fields': 'public_metrics'}
         json_response = self.connect_to_endpoint(url, query_params)
-        return json_response['data'][0]['public_metrics']
+        return json_response["data"]["id"]
+    
+    def get_user_tweets(self, username):
+        userid = self.get_user_id(username)
+        """
+        Returns list of objects like below
+        {'id': '1468928909626515460', 
+        'public_metrics': {'retweet_count': 0, 'reply_count': 0, 'like_count': 0, 'quote_count': 0},
+        'text': '@maybe__pirog Hahahahhaa'}
+        """
+        url = f'https://api.twitter.com/2/users/{userid}/tweets'
+        query_params = {
+            'tweet.fields': 'public_metrics', 
+            'exclude': 'retweets,replies'}
+
+        json_response = self.connect_to_endpoint(url, query_params)
+        if not json_response["meta"]["result_count"] > 0:
+            print("Not enough tweets from provided user")
+            return []
+        return json_response["data"]
 
     def get_tweet(self, tweet_id):
         url = f'https://api.twitter.com/2/tweets?ids={tweet_id}'
-        query_params = {'tweet.fields': 'author_id'}
-
+        query_params = {'tweet.fields': 'public_metrics'}
         json_response = self.connect_to_endpoint(url, query_params)
-        return json_response['data'][0]['text']
+        return json_response['data'][0]['text'], json_response['data'][0]['public_metrics']
 
     def get_comments(self, tweet_id):
         url = f'https://api.twitter.com/2/tweets/search/recent?query=conversation_id:{tweet_id}'

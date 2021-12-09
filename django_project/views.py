@@ -58,6 +58,9 @@ def single_tweet_data(tweet_id):
 
 
 def multi_tweet_data(username):
+    tweets = twitter_client.get_user_tweets(username)
+
     return {
-        'request_success': True,
+        'request_success': len(tweets) > 0,
+        'tweets': tweets,
     }
