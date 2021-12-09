@@ -1,6 +1,8 @@
 import os
 import requests
 from .sentiment_model import SentimentModel
+from django.core.cache import cache
+
 
 class TwitterClient:
     bearer_token = os.getenv('TWITTER_BEARER_TOKEN')
@@ -115,7 +117,14 @@ class TwitterClient:
         return r
 
     def connect_to_endpoint(self, url, params):
+        cached_response = cache.get(url)
+        if cached_response:
+            return cached_response
+
         response = requests.get(url, auth=self.bearer_oauth, params=params)
         if response.status_code != 200:
             raise Exception(response.status_code, response.text)
-        return response.json()
+
+        json_response = response.json()
+        cache.set(url, json_response)
+        return json_response
