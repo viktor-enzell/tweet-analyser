@@ -42,7 +42,7 @@ def index(request):
 
 
 def single_tweet_data(tweet_id):
-    tweet, meta = twitter_client.get_tweet(tweet_id)
+    tweet = twitter_client.get_tweet(tweet_id)
     comments = twitter_client.get_comments(tweet_id)
     comment_sentiment = sentiment_model.fit_predict(comments)
     tweet_has_comments = len(comments) > 0
@@ -50,11 +50,20 @@ def single_tweet_data(tweet_id):
     # if tweet_has_comments:
     #     sentiment_model.get_boxplot()
 
+    if comment_sentiment < 0.5:
+        # Green
+        comment_sentiment_color = f'rgb(255,0,0,{comment_sentiment})'
+    else:
+        # Red
+        comment_sentiment_color = f'rgb(61,255,0,{1 - comment_sentiment})'
+
     return {
-        'request_success': len(tweet) > 0,
+        'request_success': len(tweet['text']) > 0,
         'tweet': tweet,
         'tweet_has_comments': tweet_has_comments,
-        'comment_sentiment': comment_sentiment * 100,
+        'comment_sentiment': comment_sentiment,
+        'comment_sentiment_percent': round(comment_sentiment * 100, 1),
+        'comment_sentiment_color': comment_sentiment_color,
     }
 
 
@@ -64,7 +73,11 @@ def multi_tweet_data(username):
     for tweet in tweets:
         ind_analysed_tweets.append(single_tweet_data(tweet['id']))
 
+    name = ind_analysed_tweets[0]['tweet']['name'] if len(ind_analysed_tweets) > 0 else ''
+
     return {
         'request_success': len(tweets) > 0,
         'tweets': ind_analysed_tweets,
+        'name': name,
+        'num_tweets': len(ind_analysed_tweets)
     }
