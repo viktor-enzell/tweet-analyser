@@ -1,9 +1,22 @@
-<p class="fs-4 text-center mb-4">Account: {{ name }}</p>
+<p class="fs-4 mb-4">Aggregated statistics over the {{ num_tweets }} latest tweets from {{ name }}</p>
 
-<p class="fs-5 mb-4">Aggregated statistics over the {{ num_tweets }} latest tweets.</p>
+{% include "progress_bar.html" with item_name="Average tweet reply sentiment" item_percent=tweets_data.average_percent bar_color=tweets_data.average_color %}
 
-<p class="fs-5 mb-4">Individual tweets.</p>
-<div class="accordion accordion-flush" id="tweetList">
+<div class="row mb-4">
+  <div class="col-6">
+    {% include "progress_bar.html" with item_name="Best tweet" item_percent=tweets_data.best_average_comment_percent bar_color=tweets_data.best_color %}
+    {% include "tweet_card.html" with body=tweets_data.best_text %}
+  </div>
+  <div class="col-6">
+    {% include "progress_bar.html" with item_name="Worst tweet" item_percent=tweets_data.worst_average_comment_percent bar_color=tweets_data.worst_color %}
+    {% include "tweet_card.html" with body=tweets_data.worst_text %}
+  </div>
+</div>
+
+{% include "divider.html" %}
+
+<p class="fs-4 mb-4">Individual tweets</p>
+<div class="accordion accordion" id="tweetList">
   {% for tweet in tweets %}
 
     <div class="accordion-item">
@@ -16,6 +29,15 @@
                 data-bs-target="#flush-collapse{{ forloop.counter }}"
                 aria-expanded="false"
                 aria-controls="flush-collapse{{ forloop.counter }}">
+          {% if forloop.counter0 == tweets_data.best %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square-fill" viewBox="0 0 16 16">
+              <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+            </svg>&nbsp;
+          {% elif forloop.counter0 == tweets_data.worst %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-square-fill" viewBox="0 0 16 16">
+              <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+            </svg>&nbsp;
+          {% endif %}
           {{ tweet.tweet_data.text|truncatechars:70 }}
         </button>
       </h2>

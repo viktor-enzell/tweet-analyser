@@ -75,13 +75,36 @@ def multi_tweet_data(username):
     for tweet in tweets:
         analysed_tweets.append(single_tweet_data(tweet['id']))
 
-    name = analysed_tweets[0]['tweet_data']['name'] if len(analysed_tweets) > 0 else ''
+    # TODO: Replace dummy below with:
+    #  multi_tweet_sentiment = twitter_client.get_multi_tweet_sentiment(tweets)
+    tweets_data = {
+        'average': 0.5,
+        'best': 3,
+        'worst': 5,
+    }
+    best = analysed_tweets[tweets_data['best']]['tweet_data']
+    worst = analysed_tweets[tweets_data['worst']]['tweet_data']
+
+    # Best and worst tweet texts
+    tweets_data['best_text'] = best['text']
+    tweets_data['worst_text'] = worst['text']
+
+    # Sentiment as percent
+    tweets_data['average_percent'] = round(tweets_data['average'] * 100, 1)
+    tweets_data['best_average_comment_percent'] = best['average_comment_sentiment_percent']
+    tweets_data['worst_average_comment_percent'] = worst['average_comment_sentiment_percent']
+
+    # Add colors
+    tweets_data['average_color'] = get_color(tweets_data['average'])
+    tweets_data['best_color'] = best['comment_sentiment_color']
+    tweets_data['worst_color'] = worst['comment_sentiment_color']
 
     return {
         'request_success': len(tweets) > 0,
         'tweets': analysed_tweets,
-        'name': name,
-        'num_tweets': len(analysed_tweets)
+        'tweets_data': tweets_data,
+        'name': analysed_tweets[0]['tweet_data']['name'] if len(analysed_tweets) > 0 else '',
+        'num_tweets': len(analysed_tweets),
     }
 
 
