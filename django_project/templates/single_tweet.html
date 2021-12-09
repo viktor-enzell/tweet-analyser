@@ -1,0 +1,6 @@
+{% include "tweet_card.html" %}
+
+{% if tweet_has_comments %}
+  {% include "progress_bar.html" with item_name="Avg comment sentiment" item_percent=comment_sentiment %}
+  {% include "boxplot.html" %}
+{% endif %}

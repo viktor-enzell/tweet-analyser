@@ -15,12 +15,18 @@
       </div>
     </form>
 
-    {% if tweet_retrieved %}
-      {% include "tweet_card.html" %}
+    {% if request_made %}
+      {% if request_success %}
 
-      {% include "progress_bar.html" with item_name="Sentiment" item_percent=sentiment %}
+        {% if single_tweet %}
+          {% include "single_tweet.html" %}
+        {% else %}
+          {% include "multi_tweet.html" %}
+        {% endif %}
 
-      {% include "boxplot.html" %}
+      {% else %}
+        <p class="fs-4 text-center mb-4">Failed to retrieve tweets</p>
+      {% endif %}
     {% endif %}
 
   </div>

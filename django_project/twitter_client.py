@@ -8,7 +8,7 @@ class TwitterClient:
 
     def get_tweet_meta(self, tweet_id):
         # Example return: {'retweet_count': 254, 'reply_count': 164, 'like_count': 4286, 'quote_count': 104} 
-        tweet_id = self.parse_tweet_id(tweet_id)
+        tweet_id = self.parse_id_or_username(tweet_id)
         if tweet_id == -1:
             return 'Tweet id parsing failed'
         url = f'https://api.twitter.com/2/tweets?ids={tweet_id}'
@@ -17,9 +17,6 @@ class TwitterClient:
         return json_response['data'][0]['public_metrics']
 
     def get_tweet(self, tweet_id):
-        tweet_id = self.parse_tweet_id(tweet_id)
-        if tweet_id == -1:
-            return ''
         url = f'https://api.twitter.com/2/tweets?ids={tweet_id}'
         query_params = {'tweet.fields': 'author_id'}
 
@@ -27,9 +24,6 @@ class TwitterClient:
         return json_response['data'][0]['text']
 
     def get_comments(self, tweet_id):
-        tweet_id = self.parse_tweet_id(tweet_id)
-        if tweet_id == -1:
-            return []
         url = f'https://api.twitter.com/2/tweets/search/recent?query=conversation_id:{tweet_id}'
         query_params = {'tweet.fields': 'in_reply_to_user_id'}
 
@@ -44,14 +38,8 @@ class TwitterClient:
         return comments
 
     @staticmethod
-    def parse_tweet_id(text):
-        try:
-            return int(text)
-        except ValueError:
-            try:
-                return int(text.split('/')[-1])
-            except ValueError:
-                return -1
+    def parse_id_or_username(text):
+        return text.split('/')[-1]
 
     def bearer_oauth(self, r):
         r.headers['Authorization'] = f'Bearer {self.bearer_token}'
