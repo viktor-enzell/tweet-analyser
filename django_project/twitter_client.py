@@ -32,9 +32,17 @@ class TwitterClient:
 
     def get_tweet(self, tweet_id):
         url = f'https://api.twitter.com/2/tweets?ids={tweet_id}'
-        query_params = {'tweet.fields': 'public_metrics'}
+        query_params = {'tweet.fields': 'public_metrics', 
+                        "user.fields": 'name,username',
+                        "expansions": 'entities.mentions.username,author_id'}
+
         json_response = self.connect_to_endpoint(url, query_params)
-        return json_response['data'][0]['text'], json_response['data'][0]['public_metrics']
+        return {
+            "username": json_response['includes']['users'][0]["username"],
+            "name": json_response['includes']['users'][0]["name"],
+            "text":json_response['data'][0]['text'],
+            "meta":json_response['data'][0]['public_metrics']
+        }
 
     def get_comments(self, tweet_id):
         url = f'https://api.twitter.com/2/tweets/search/recent?query=conversation_id:{tweet_id}'
