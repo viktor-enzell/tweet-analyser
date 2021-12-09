@@ -81,6 +81,7 @@ class TwitterClient:
             comments = self.get_comments(tweet_id)
             sentiments = SentimentModel.fit_predict(comments, tweet['text'])
             tweet_sentiment += sentiments['tweet']
+            #not using comment sentiments for this
             comment_sentiment += sentiments['comment']
             if best <= tweet_sentiment:
                 best = tweet_sentiment
