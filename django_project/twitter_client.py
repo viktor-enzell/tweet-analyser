@@ -1,6 +1,6 @@
 import os
 import requests
-
+from .sentiment_model import SentimentModel
 
 class TwitterClient:
     bearer_token = os.getenv('TWITTER_BEARER_TOKEN')
@@ -51,7 +51,7 @@ class TwitterClient:
         return comments
 
     # scale of 0-2 of meta_data sentiment. 0 is not positive, 2 is positive
-    def how_good(self,meta_data):
+    def get_meta_data_sentiment(self,meta_data):
         count = 0
         retweet_count = meta_data['retweet_count']
         like_count = meta_data['like_count']
@@ -63,6 +63,38 @@ class TwitterClient:
         if quote_count > reply_count:
             count = count + 1
         return count
+
+    """
+    returns object {'average': '75', 
+                    'best: 'index'
+                    'worst: 'index'
+                    }
+    """
+    def get_multi_tweet_sentiment(self, tweets):
+        comment_sentiment = 0
+        tweet_sentiment = 0
+        best = 0
+        worst = 0
+        for index, tweet in enumerate(tweets):
+            tweet_id = tweet['data'][0]['id']
+            tweet = self.get_tweet(tweet_id)
+            comments = self.get_comments(tweet_id)
+            sentiments = SentimentModel.fit_predict(comments, tweet['text'])
+            tweet_sentiment += sentiments['tweet']
+            comment_sentiment += sentiments['comment']
+            if best <= tweet_sentiment:
+                best = tweet_sentiment
+                best_idx = index
+            if worst >= tweet_sentiment:
+                worst = tweet_sentiment
+                worst_idx = index
+        
+        avg_tweet = tweet_sentiment / len(tweets)
+        obj = dict()
+        obj['average'] = avg_tweet
+        obj['best'] = best_idx
+        obj['worst'] = worst_idx
+        return obj
 
     @staticmethod
     def parse_id_or_username(text):
