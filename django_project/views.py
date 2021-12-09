@@ -35,7 +35,6 @@ def index(request):
                         'tweet': tweet,
                         'sentiment_is_positive': sentiment > 0.5,
                         'sentiment': sentiment * 100,
-                        'like_ratio': 44,
                     }
                     return render(request, 'index.html', context)
 

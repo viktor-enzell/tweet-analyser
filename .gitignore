@@ -3,3 +3,4 @@ __pycache__/
 .env
 boxplot_tmp
 db.sqlite3
+.DS_Store
