@@ -1,6 +1,6 @@
 <div class="row mb-4">
 
-  <div class="col-3 fs-5">
+  <div class="col-6 fs-6">
     {{ item_name }}
   </div>
   <div class="col">
@@ -8,7 +8,7 @@
     <div class="progress" style="height: 100%">
       <div class="progress-bar"
            role="progressbar"
-           style="width: {{ item_percent }}%; background-color: {{ comment_sentiment_color }}"
+           style="width: {{ item_percent }}%; background-color: {{ bar_color }}; color: black;"
            aria-valuenow="{{ item_percent }}"
            aria-valuemin="0"
            aria-valuemax="100">{{ item_percent }}%

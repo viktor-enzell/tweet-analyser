@@ -1,5 +1,24 @@
-{% include "tweet_card.html" %}
+{% include "tweet_card.html" with title=tweet_data.name body=tweet_data.text %}
 
-{% if tweet_has_comments %}
-  {% include "progress_bar.html" with item_name="Avg comment sentiment" item_percent=comment_sentiment_percent %}
+{% include "divider.html" %}
+
+{% include "progress_bar.html" with item_name="Tweet sentiment" item_percent=tweet_data.tweet_sentiment_percent bar_color=tweet_data.tweet_sentiment_color %}
+
+{% if tweet_data.tweet_has_comments %}
+  {% include "progress_bar.html" with item_name="Avg response sentiment" item_percent=tweet_data.average_comment_sentiment_percent bar_color=tweet_data.comment_sentiment_color %}
+
+  {% include "divider.html" %}
+
+  <div class="row mb-4">
+    <div class="col-6">
+      {% include "progress_bar.html" with item_name="Most positive reply" item_percent=tweet_data.max_reply.sentiment_percent bar_color=tweet_data.max_reply.color %}
+      {% include "tweet_card.html" with body=tweet_data.max_reply.text %}
+    </div>
+    <div class="col-6">
+      {% include "progress_bar.html" with item_name="Most negative reply" item_percent=tweet_data.min_reply.sentiment_percent bar_color=tweet_data.min_reply.color %}
+      {% include "tweet_card.html" with body=tweet_data.min_reply.text %}
+    </div>
+  </div>
+
+
 {% endif %}

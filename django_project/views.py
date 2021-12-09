@@ -46,52 +46,49 @@ def single_tweet_data(tweet_id):
     comments = twitter_client.get_comments(tweet_id)
 
     tweet_data = sentiment_model.fit_predict(comments, tweet["text"])
-    """
-    {
-    "tweet_sentiment": ,
-    "average_comment_sentiment": ,
-    "max_reply": {
-        "text" : ,
-        "sentiment" : 
-    },
-    "min_reply": {
-        "text" : ,
-        "sentiment" : 
-    },
-    """
-    # if tweet_has_comments:
-    #     sentiment_model.get_boxplot()
-    print('hello', type(tweet_data))
-    comment_sentiment = tweet_data['average_comment_sentiment']
 
-    if comment_sentiment < 0.5:
-        comment_sentiment_color = f'rgb(255,0,0,{1 - comment_sentiment})'  # Red
-    else:
-        comment_sentiment_color = f'rgb(61,255,0,{comment_sentiment})'  # Green
+    tweet_data.update(tweet)
+    tweet_data['comments'] = comments
+    tweet_data['tweet_has_comments'] = len(comments) > 0
+
+    # Sentiment as percent
+    tweet_data['tweet_sentiment_percent'] = round(tweet_data['tweet_sentiment'] * 100, 1)
+    tweet_data['average_comment_sentiment_percent'] = round(tweet_data['average_comment_sentiment'] * 100, 1)
+    tweet_data['max_reply']['sentiment_percent'] = round(tweet_data['max_reply']['sentiment'] * 100, 1)
+    tweet_data['min_reply']['sentiment_percent'] = round(tweet_data['min_reply']['sentiment'] * 100, 1)
+
+    # Add colors
+    tweet_data['tweet_sentiment_color'] = get_color(tweet_data['tweet_sentiment'])
+    tweet_data['comment_sentiment_color'] = get_color(tweet_data['average_comment_sentiment'])
+    tweet_data['max_reply']['color'] = get_color(tweet_data['max_reply']['sentiment'])
+    tweet_data['min_reply']['color'] = get_color(tweet_data['min_reply']['sentiment'])
 
     return {
         'request_success': len(tweet['text']) > 0,
-        'tweet': tweet,
-        'tweet_has_comments': len(comments) > 0,
-        'tweet_sentiment': tweet_data['tweet_sentiment'],
-        'comment_sentiment': comment_sentiment,
-        'comment_sentiment_percent': round(comment_sentiment * 100, 1),
-        'comment_sentiment_color': comment_sentiment_color,
+        'tweet_data': tweet_data,
     }
 
 
 def multi_tweet_data(username):
     tweets = twitter_client.get_user_tweets(username)
-    ind_analysed_tweets = []
+    analysed_tweets = []
     for tweet in tweets:
-        print('tweet', tweet)
-        ind_analysed_tweets.append(single_tweet_data(tweet['id']))
+        analysed_tweets.append(single_tweet_data(tweet['id']))
 
-    name = ind_analysed_tweets[0]['tweet']['name'] if len(ind_analysed_tweets) > 0 else ''
+    name = analysed_tweets[0]['tweet_data']['name'] if len(analysed_tweets) > 0 else ''
 
     return {
         'request_success': len(tweets) > 0,
-        'tweets': ind_analysed_tweets,
+        'tweets': analysed_tweets,
         'name': name,
-        'num_tweets': len(ind_analysed_tweets)
+        'num_tweets': len(analysed_tweets)
     }
+
+
+def get_color(sentiment):
+    if sentiment < 0.5:
+        # Red
+        return f'rgb(255,0,0,{1 - sentiment})'
+    else:
+        # Green
+        return f'rgb(61,255,0,{sentiment})'

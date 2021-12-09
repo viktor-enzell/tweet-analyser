@@ -14,11 +14,21 @@ class SentimentModel:
 
     # Takes a list of texts and returns sentiment from 0 to 1
     def fit_predict(self, comments, tweet):
-        if not comments:
-            return 0.5
-
         feature = self.vec.transform([tweet])
         prediction = self.model.predict_proba(feature)[0][1]
+        if not comments:
+            return {
+                'tweet_sentiment': prediction,
+                'average_comment_sentiment': 0,
+                'max_reply': {
+                    'text': '',
+                    'sentiment': 0,
+                },
+                'min_reply': {
+                    'text': '',
+                    'sentiment': 0,
+                },
+            }
 
         self.comments = comments
         features = self.vec.transform(comments)
@@ -27,15 +37,15 @@ class SentimentModel:
         max_index = self.res.index(max(self.res))
         min_index = self.res.index(min(self.res))
         return {
-            "tweet_sentiment": prediction,
-            "average_comment_sentiment": sum(self.res) / len(self.res),
-            "max_reply": {
-                "text": self.comments[max_index],
-                "sentiment": self.res[max_index]
+            'tweet_sentiment': prediction,
+            'average_comment_sentiment': sum(self.res) / len(self.res),
+            'max_reply': {
+                'text': self.comments[max_index],
+                'sentiment': self.res[max_index],
             },
-            "min_reply": {
-                "text": self.comments[min_index],
-                "sentiment": self.res[min_index]
+            'min_reply': {
+                'text': self.comments[min_index],
+                'sentiment': self.res[min_index],
             },
         }
 

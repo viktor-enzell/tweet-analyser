@@ -4,20 +4,19 @@
 
 <p class="fs-5 mb-4">Individual tweets.</p>
 <div class="accordion accordion-flush" id="tweetList">
-  {% for item in tweets %}
+  {% for tweet in tweets %}
 
     <div class="accordion-item">
 
       <h2 class="accordion-header"
-          id="flush-heading{{ forloop.counter }}"
-          style="background-color: {{ item.comment_sentiment_color }}">
+          id="flush-heading{{ forloop.counter }}">
         <button class="accordion-button collapsed"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#flush-collapse{{ forloop.counter }}"
                 aria-expanded="false"
                 aria-controls="flush-collapse{{ forloop.counter }}">
-          {{ item.tweet.text|truncatechars:70 }}
+          {{ tweet.tweet_data.text|truncatechars:70 }}
         </button>
       </h2>
 
@@ -26,7 +25,7 @@
            aria-labelledby="flush-heading{{ forloop.counter }}"
            data-bs-parent="#tweetList">
         <div class="accordion-body">
-          {% include "single_tweet.html" with tweet_has_comments=item.tweet_has_comments tweet=item.tweet comment_sentiment_percent=item.comment_sentiment_percent comment_sentiment_color=item.comment_sentiment_color %}
+          {% include "single_tweet.html" with tweet_data=tweet.tweet_data %}
         </div>
       </div>
 

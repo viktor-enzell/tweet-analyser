@@ -1,6 +1,8 @@
 <div class="card mb-4" style="">
   <div class="card-body">
-    <h5 class="card-title">{{ tweet.name }}</h5>
-    <p class="card-text">{{ tweet.text }}</p>
+    {% if title %}
+      <h5 class="card-title">{{ title }}</h5>
+    {% endif %}
+    <p class="card-text" style="white-space: pre-line">{{ body }}</p>
   </div>
 </div>
