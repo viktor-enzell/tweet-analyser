@@ -20,7 +20,19 @@ class SentimentModel:
 
         predictions = self.model.predict_proba(features)
         self.res = [prediction[1] for prediction in predictions]
-        return sum(self.res) / len(self.res)
+        max_index = self.res.index(max(self.res))
+        min_index = self.res.index(min(self.res))
+        return {
+            "average_sentiment": sum(self.res) / len(self.res),
+            "max_reply": {
+                "text" : self.data[max_index],
+                "sentiment" : self.res[max_index]
+            },
+            "min_reply": {
+                "text" : self.data[min_index],
+                "sentiment" : self.res[min_index] 
+            },
+        }
 
     def get_positive_outlier(self):
         max_index = self.res.index(max(self.res))
