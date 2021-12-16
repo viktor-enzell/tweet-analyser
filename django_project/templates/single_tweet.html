@@ -2,6 +2,32 @@
 
 {% include "divider.html" %}
 
+<div class="row mb-4 text-center fs-4">
+  <div class="col-3"
+       data-bs-toggle="tooltip" data-bs-placement="bottom" title="Like count">
+    <i class="bi bi-heart"></i>
+    {{ tweet_data.meta.like_count }}
+  </div>
+  <div class="col-3"
+       data-bs-toggle="tooltip" data-bs-placement="bottom" title="Reply count">
+    <i class="bi bi-chat-right"></i>
+    {{ tweet_data.meta.reply_count }}
+  </div>
+  <div class="col-3"
+       data-bs-toggle="tooltip" data-bs-placement="bottom" title="Retweet count">
+    <i class="bi bi-arrow-repeat"></i>
+    {{ tweet_data.meta.retweet_count }}
+  </div>
+  <div class="col-3"
+       data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote count">
+    <i class="bi bi-chat-right-quote"></i>
+    {{ tweet_data.meta.quote_count }}
+  </div>
+</div>
+
+{% include "divider.html" %}
+
+
 {% include "progress_bar.html" with item_name="Tweet sentiment" item_percent=tweet_data.tweet_sentiment_percent bar_color=tweet_data.tweet_sentiment_color %}
 
 {% if tweet_data.tweet_has_comments %}

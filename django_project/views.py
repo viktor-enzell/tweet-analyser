@@ -76,7 +76,7 @@ def multi_tweet_data(username):
         analysed_tweets.append(single_tweet_data(tweet['id']))
 
     # TODO: Replace dummy below with:
-    #  multi_tweet_sentiment = twitter_client.get_multi_tweet_sentiment(tweets)
+    #  tweets_data = twitter_client.get_multi_tweet_sentiment(tweets)
     tweets_data = {
         'average': 0.5,
         'best': 3,
