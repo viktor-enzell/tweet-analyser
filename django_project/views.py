@@ -75,13 +75,8 @@ def multi_tweet_data(username):
     for tweet in tweets:
         analysed_tweets.append(single_tweet_data(tweet['id']))
 
-    # TODO: Replace dummy below with:
-    #  tweets_data = twitter_client.get_multi_tweet_sentiment(tweets)
-    tweets_data = {
-        'average': 0.5,
-        'best': 3,
-        'worst': 5,
-    }
+    tweets_data = get_multi_tweet_sentiment(analysed_tweets)
+
     best = analysed_tweets[tweets_data['best']]['tweet_data']
     worst = analysed_tweets[tweets_data['worst']]['tweet_data']
 
@@ -90,7 +85,7 @@ def multi_tweet_data(username):
     tweets_data['worst_text'] = worst['text']
 
     # Sentiment as percent
-    tweets_data['average_percent'] = round(tweets_data['average'] * 100, 1)
+    tweets_data['average_percent'] = round(tweets_data['average'], 1)
     tweets_data['best_average_comment_percent'] = best['average_comment_sentiment_percent']
     tweets_data['worst_average_comment_percent'] = worst['average_comment_sentiment_percent']
 
@@ -106,6 +101,29 @@ def multi_tweet_data(username):
         'name': analysed_tweets[0]['tweet_data']['name'] if len(analysed_tweets) > 0 else '',
         'num_tweets': len(analysed_tweets),
     }
+
+
+def get_multi_tweet_sentiment(analysed_tweets):
+    total = 0
+    best = 0
+    worst = 100
+    # Make sure we analyze tweets with comments
+    counter = 0
+    for index, _ in enumerate(analysed_tweets):
+        temp = analysed_tweets[index]["tweet_data"]["average_comment_sentiment_percent"]
+        if (not analysed_tweets[index]["tweet_data"]["tweet_has_comments"]):
+            continue
+        total += temp
+        if best <= temp:
+            best = temp
+            best_idx = index
+        if worst >= temp:
+            worst = temp
+            worst_idx = index
+        counter += 1
+
+    avg_tweet = total / counter
+    return {'average': avg_tweet, 'best': best_idx, 'worst': worst_idx}
 
 
 def get_color(sentiment):
