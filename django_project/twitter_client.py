@@ -80,32 +80,7 @@ class TwitterClient:
                     'worst: 'index'
                     }
     """
-    def get_multi_tweet_sentiment(self, tweets):
-        comment_sentiment = 0
-        tweet_sentiment = 0
-        best = 0
-        worst = 0
-        for index, tweet in enumerate(tweets):
-            tweet_id = tweet['data'][0]['id']
-            tweet = self.get_tweet(tweet_id)
-            comments = self.get_comments(tweet_id)
-            sentiments = SentimentModel.fit_predict(comments, tweet['text'])
-            tweet_sentiment += sentiments['tweet']
-            #not using comment sentiments for this
-            comment_sentiment += sentiments['comment']
-            if best <= tweet_sentiment:
-                best = tweet_sentiment
-                best_idx = index
-            if worst >= tweet_sentiment:
-                worst = tweet_sentiment
-                worst_idx = index
-        
-        avg_tweet = tweet_sentiment / len(tweets)
-        obj = dict()
-        obj['average'] = avg_tweet
-        obj['best'] = best_idx
-        obj['worst'] = worst_idx
-        return obj
+
 
     @staticmethod
     def parse_id_or_username(text):
