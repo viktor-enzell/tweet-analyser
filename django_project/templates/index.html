@@ -27,7 +27,9 @@
         {% endif %}
 
       {% else %}
-        <p class="fs-4 text-center mb-4">Failed to retrieve tweets</p>
+        <div class="alert alert-danger" role="alert">
+          Failed to retrieve tweets.
+        </div>
       {% endif %}
     {% endif %}
 

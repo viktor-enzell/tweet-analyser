@@ -46,5 +46,10 @@
     </div>
   </div>
 
+{% elif tweet_data.meta.reply_count < 10 %}
+
+  <div class="alert alert-warning" role="alert">
+    Tweet has too few replies. Provide a Tweet with at least 10 replies to see full analysis.
+  </div>
 
 {% endif %}
