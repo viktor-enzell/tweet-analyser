@@ -42,8 +42,12 @@ def index(request):
 
 
 def single_tweet_data(tweet_id):
-    tweet = twitter_client.get_tweet(tweet_id)
-    comments = twitter_client.get_comments(tweet_id)
+    try:
+        tweet = twitter_client.get_tweet(tweet_id)
+        comments = twitter_client.get_comments(tweet_id)
+    except Exception as e:
+        print(e)
+        return {'request_success': False}
 
     tweet_data = sentiment_model.fit_predict(comments, tweet["text"])
 
@@ -70,7 +74,12 @@ def single_tweet_data(tweet_id):
 
 
 def multi_tweet_data(username):
-    tweets = twitter_client.get_user_tweets(username)
+    try:
+        tweets = twitter_client.get_user_tweets(username)
+    except Exception as e:
+        print(e)
+        return {'request_success': False}
+
     analysed_tweets = []
     for tweet in tweets:
         analysed_tweets.append(single_tweet_data(tweet['id']))

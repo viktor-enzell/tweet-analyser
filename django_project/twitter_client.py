@@ -1,6 +1,5 @@
 import os
 import requests
-from .sentiment_model import SentimentModel
 from django.core.cache import cache
 
 
